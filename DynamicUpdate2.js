@@ -1,10 +1,10 @@
 var anim;
 var podaci;
 var innerHtml = "";
-$.getJSON("lorem.json", function (data) {
+$.getJSON("loremTest.json", function (data) {
     podaci = data;
     insertFields();
-    start();
+    start2();    
 });
 function start() {
     var elem = document.getElementById("lottie");
@@ -14,11 +14,13 @@ function start() {
         loop: true,
         autoplay: true,
         rendererSettings: {
-            progressiveLoad: false
+            progressiveLoad: false,
+            preserveAsceptRatio:'xMidYMid meet'
         },
         animationData: podaci
     };
     anim = lottie.loadAnimation(animData);
+    console.log(anim);
 }
 //canvas
 function start2() {
@@ -34,6 +36,7 @@ function start2() {
             context: ctx,
             progressiveLoad: false,
             scaleMode: "noScale",
+            preserveAsceptRatio:'xMidYMid meet',
             clearCanvas: true,
             hideOnTransparent: true,
             className: "nekaklasa"
@@ -55,7 +58,7 @@ function numHex(s) {
 function insertFields() {
     podaci.layers.forEach((layer, i) => {
         if (layer.t && layer.st >= 0) {
-            innerHtml += "Layer: " + i + "<input type='text' name='tb' value='" + layer.t.d.k[0].s.t + "' size ='10'/>";
+            innerHtml += "Layer: " + i + "<input type='text' class='inputsTextData' value='" + layer.t.d.k[0].s.t + "' size ='10'/>";
             if (layer.ef) {
                 checkcolor(layer.ef, function (res) {
                     if (res) {
@@ -101,9 +104,8 @@ function insertFields() {
                     }
                 });
             }
-            if(asset.w && asset.h && asset.p){
-               innerHtml+="Photo "+i+"<input type='text' value='"+ asset.p+"'/>";
-               console.log(asset.p);
+            if (asset.w && asset.h && asset.p) {
+                innerHtml += "Photo dimensions: Width(" + asset.w + ") | Height(" + asset.h + ")<input type='text' class='inputsAssetData' value='" + asset.p + "'/>";
             }
 
         });
@@ -143,36 +145,44 @@ function checkcolor(obj, callback) {
 //function for updating data
 function updateData() {
     var textColor = [];
-    var texts = [];
+    var text = [];
     var shapeColor = [];
     var shapeColorAsset = [];
-    var inputsText = $("#inputs > input[type='text']");
-    if(inputsText.length){
+    var assetText = [];
+    var inputsText = $("#inputs .inputsTextData");
+    if (inputsText.length) {
         inputsText.toArray().forEach(element => {
-            texts.push(element.value);
+            text.push(element.value);
         });
-    }    
+    }
+    var assetsText = $("#inputs .inputsAssetData");
+    if (assetsText.length) {
+        assetsText.toArray().forEach(element => {
+            assetText.push(element.value);
+        });
+    }
     var inputsColorText = $("#inputs .inputsColorText");
-    if(inputsColorText.length){
+    if (inputsColorText.length) {
         inputsColorText.toArray().forEach(element => {
             textColor.push(element.value);
         });
-    }    
+    }
     var inputsColorShapes = $("#inputs .inputsColorShapes");
-    if(inputsColorShapes.length){
+    if (inputsColorShapes.length) {
         inputsColorShapes.toArray().forEach(element => {
-            shapeColor.push(element.value);    
+            shapeColor.push(element.value);
         });
-    }    
+    }
     var inputsColorShapesAsset = $("#inputs .inputsColorShapesAsset");
-    if(inputsColorShapesAsset.length){
+    if (inputsColorShapesAsset.length) {
         inputsColorShapesAsset.toArray().forEach(element => {
             shapeColorAsset.push(element.value);
         });
-    }    
-    
+    }
+
     var n = 0;
     var nn = 0;
+    var nnn=0;
     podaci.layers.forEach((layer, i) => {
         // if (layer.t) {
         // var clrarray = [];
@@ -230,11 +240,18 @@ function updateData() {
                     }
                 });
             }
+            if (asset.w && asset.h && asset.p) {
+                podaci.assets[i].u="";
+                podaci.assets[i].p=assetText[nnn];
+                podaci.assets[i].w=10;
+                podaci.assets[i].h=10;
+                nnn++;
+            }
         });
     }
     anim.destroy();
-    start();
-    texts.forEach((element, i) => {
+    start2();
+    text.forEach((element, i) => {
         var clrarray = [];
         let R = parseInt(textColor[i].substr(1, 2), 16);
         let G = parseInt(textColor[i].substr(3, 2), 16);
