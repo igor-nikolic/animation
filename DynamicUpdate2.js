@@ -1,10 +1,10 @@
 var anim;
 var podaci;
 var innerHtml = "";
-$.getJSON("whale.json", function (data) {
+$.getJSON("lorem.json", function (data) {
     podaci = data;
     insertFields();
-    start2();
+    start();
 });
 function start() {
     var elem = document.getElementById("lottie");
@@ -43,7 +43,7 @@ function start2() {
     anim = lottie.loadAnimation(animData);
 }
 $(document).on("click", "#btnUpdate", updateData);
-$(document).on("click", "#btnStart", start2);
+$(document).on("click", "#btnStart", start);
 $(document).on('click', '#btnDestroy', function () {
     anim.destroy();
 });
@@ -83,18 +83,6 @@ function insertFields() {
                 }
             });
         }
-
-
-        //slike
-        // if (podaci.assets) {
-        //     var obj = podaci.assets;
-        //     for (var prop in obj) {
-        //         if (!obj.hasOwnProperty(prop)) {
-        //             continue;
-        //         }
-        //         innerHtml += "File: <input type='file' name='pic' id='" + obj[prop].id + "'value='" + obj[prop].u + obj[prop].p + "'> Width:" + obj[prop].w + " px Height:" + obj[prop].h + " px Name: " + obj[prop].p + "<br/>";
-        //     }
-        // }        
     });
     if (podaci.assets) {
         podaci.assets.forEach((asset, i) => {
@@ -113,6 +101,11 @@ function insertFields() {
                     }
                 });
             }
+            if(asset.w && asset.h && asset.p){
+               innerHtml+="Photo "+i+"<input type='text' value='"+ asset.p+"'/>";
+               console.log(asset.p);
+            }
+
         });
     }
     if (innerHtml !== "") {
@@ -154,29 +147,29 @@ function updateData() {
     var shapeColor = [];
     var shapeColorAsset = [];
     var inputsText = $("#inputs > input[type='text']");
-    inputsText.toArray().forEach(element => {
-        texts.push(element.value);
-    });
+    if(inputsText.length){
+        inputsText.toArray().forEach(element => {
+            texts.push(element.value);
+        });
+    }    
     var inputsColorText = $("#inputs .inputsColorText");
     if(inputsColorText.length){
         inputsColorText.toArray().forEach(element => {
             textColor.push(element.value);
         });
-    }
-    
+    }    
     var inputsColorShapes = $("#inputs .inputsColorShapes");
     if(inputsColorShapes.length){
         inputsColorShapes.toArray().forEach(element => {
             shapeColor.push(element.value);    
         });
-    }
-    
+    }    
     var inputsColorShapesAsset = $("#inputs .inputsColorShapesAsset");
     if(inputsColorShapesAsset.length){
         inputsColorShapesAsset.toArray().forEach(element => {
             shapeColorAsset.push(element.value);
         });
-    }
+    }    
     
     var n = 0;
     var nn = 0;
@@ -239,41 +232,6 @@ function updateData() {
             }
         });
     }
-
-    // start();
-
-    //         anim.renderer.elements[i].updateDocumentData(
-    //             { t: nizInputa[i], fc: clrarray },
-    //             0
-    //         );
-
-
-
-    // for (var i = 0; i < layersArray.length; i++) {
-    //     var layerToUpdate = podaci.layers[layersArray[i]];
-    //     if (inputsText[i].value == "") {
-    //         let x = parseInt(i);
-    //         let y = parseInt("1");
-    //         alert("You haven't filled in the field # " + (x + y) + "! Please do so!");
-    //         return;
-    //     } else {
-    //        // anim.destroy();            
-    //         let clr = inputsColorText[i].value;
-    //         let clrarray = [];
-    //         let R = parseInt(clr.substr(1, 2), 16);
-    //         let G = parseInt(clr.substr(3, 2), 16);
-    //         let B = parseInt(clr.substr(5, 2), 16);
-    //         R = R / 255;
-    //         G = G / 255;
-    //         B = B / 255;
-    //         clrarray.push(R, G, B, 1);
-
-    //         anim.renderer.elements[layersArray[i]].updateDocumentData(
-    //             { t: inputsText[i].value, fc: clrarray },
-    //             0
-    //         );
-    //     }
-    // }
     anim.destroy();
     start();
     texts.forEach((element, i) => {
