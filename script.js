@@ -1,7 +1,7 @@
 var anim;
 var podaci;
 var innerHtml = "";
-$.getJSON("data2.json", function (data) {
+$.getJSON("animations/lorem.json", function (data) {
     podaci = data;
     insertFields();
     start2();
@@ -65,15 +65,15 @@ function insertFields() {
                 if (layer.ef) {
                     checkcolor(layer.ef, function (res) {
                         if (res) {
-                            innerHtml += "<input type='color' class='inputsColorText' value='" + getColor(res) + "'/><br/>";
+                            innerHtml += "1<input type='color' class='inputsColorText' value='" + getColor(res) + "'/><br/>";
                         }
                         else {
-                            innerHtml += "<input type='color' class='inputsColorText' value='" + getColor(layer.t.d.k[0].s.fc) + "'/><br/>";
+                            innerHtml += "2<input type='color' class='inputsColorText' value='" + getColor(layer.t.d.k[0].s.fc) + "'/><br/>";
                         }
                     });
                 }
                 else {
-                    innerHtml += "<input type='color' class='inputsColorText' value='" + getColor(layer.t.d.k[0].s.fc) + "'/><br/>";
+                        innerHtml += "3<input type='color' class='inputsColorText' value='" + getColor(layer.t.d.k[0].s.fc) + "'/><br/>";                    
                 }
             }
             if (layer.shapes) {
@@ -83,7 +83,10 @@ function insertFields() {
                         for (let k = 0; k < shape.it.length; k++) {
                             let prop = shape.it[k];
                             if (['fl', 'st'].includes(prop.ty)) {
-                                innerHtml += prop.nm + " : <input type='color' class ='inputsColorShapes' value='" + getColor(prop.c.k) + "'/> &nbsp;&nbsp;";
+                                if (typeof prop.c.k[0] == 'number') {
+                                    innerHtml += prop.nm + " : <input type='color' class ='inputsColorShapes' value='" + getColor(prop.c.k) + "'/> &nbsp;&nbsp;";
+                                }
+
                             }
                         }
                     }
@@ -104,7 +107,9 @@ function insertFields() {
                                 for (let l = 0; l < shape.it.length; l++) {
                                     let prop = shape.it[l];
                                     if (['fl', 'st'].includes(prop.ty)) {
-                                        innerHtml += prop.nm + " <input type='color' class ='inputsColorShapesAsset' value='" + getColor(prop.c.k) + "'/> &nbsp;&nbsp;";
+                                        if (typeof prop.c.k[0] == 'number') {
+                                            innerHtml += prop.nm + " <input type='color' class ='inputsColorShapesAsset' value='" + getColor(prop.c.k) + "'/> &nbsp;&nbsp;";
+                                        }
                                     }
                                 }
                             }
@@ -206,16 +211,19 @@ function updateData() {
                     for (let k = 0; k < shape.it.length; k++) {
                         let prop = shape.it[k];
                         if (['fl', 'st'].includes(prop.ty)) {
-                            var clrarray = [];
-                            let R = parseInt(shapeColor[n].substr(1, 2), 16);
-                            let G = parseInt(shapeColor[n].substr(3, 2), 16);
-                            let B = parseInt(shapeColor[n].substr(5, 2), 16);
-                            R = R / 255;
-                            G = G / 255;
-                            B = B / 255;
-                            clrarray.push(R, G, B, 1);
-                            podaci.layers[i].shapes[j].it[k].c.k = clrarray;
-                            n++;
+                            if (typeof prop.c.k == 'number') {
+                                var clrarray = [];
+                                let R = parseInt(shapeColor[n].substr(1, 2), 16);
+                                let G = parseInt(shapeColor[n].substr(3, 2), 16);
+                                let B = parseInt(shapeColor[n].substr(5, 2), 16);
+                                R = R / 255;
+                                G = G / 255;
+                                B = B / 255;
+                                clrarray.push(R, G, B, 1);
+                                podaci.layers[i].shapes[j].it[k].c.k = clrarray;
+                                n++;
+                            }
+
                         }
                     }
                 }
@@ -235,16 +243,18 @@ function updateData() {
                                 for (let l = 0; l < shape.it.length; l++) {
                                     let prop = shape.it[l];
                                     if (['fl', 'st'].includes(prop.ty)) {
-                                        var clrarray = [];
-                                        let R = parseInt(shapeColorAsset[nn].substr(1, 2), 16);
-                                        let G = parseInt(shapeColorAsset[nn].substr(3, 2), 16);
-                                        let B = parseInt(shapeColorAsset[nn].substr(5, 2), 16);
-                                        R = R / 255;
-                                        G = G / 255;
-                                        B = B / 255;
-                                        clrarray.push(R, G, B, 1);
-                                        podaci.assets[i].layers[j].shapes[k].it[l].c.k = clrarray;
-                                        nn++;
+                                        if (typeof prop.c.k[0] == 'number') {
+                                            var clrarray = [];
+                                            let R = parseInt(shapeColorAsset[nn].substr(1, 2), 16);
+                                            let G = parseInt(shapeColorAsset[nn].substr(3, 2), 16);
+                                            let B = parseInt(shapeColorAsset[nn].substr(5, 2), 16);
+                                            R = R / 255;
+                                            G = G / 255;
+                                            B = B / 255;
+                                            clrarray.push(R, G, B, 1);
+                                            podaci.assets[i].layers[j].shapes[k].it[l].c.k = clrarray;
+                                            nn++;
+                                        }
                                     }
                                 }
                             }
@@ -266,27 +276,30 @@ function updateData() {
     }
     anim.destroy();
     start2();
-    anim.addEventListener('DOMLoaded',function () {
+    anim.addEventListener('DOMLoaded', function () {
         //alert('ucitan');
-        var josnekibrojac=0;
-    for(let i =0;i<podaci.layers.length;i++){
-        let layer=podaci.layers[i];
-        if (layer.t && layer.st >= 0) {
-            let clrarray = [];
-        let R = parseInt(textColor[josnekibrojac].substr(1, 2), 16);
-        let G = parseInt(textColor[josnekibrojac].substr(3, 2), 16);
-        let B = parseInt(textColor[josnekibrojac].substr(5, 2), 16);
-        R = R / 255;
-        G = G / 255;
-        B = B / 255;
-        clrarray.push(R, G, B, 1);
-        anim.renderer.elements[i].updateDocumentData(
-            { t: text[josnekibrojac], fc: clrarray },
-            0
-        );
-        josnekibrojac++;
+        var josnekibrojac = 0;
+        for (let i = 0,proba=0; i < podaci.layers.length; i++) {
+            let layer = podaci.layers[i];
+            if (layer.t && layer.st >= 0) {
+                let clrarray = [];
+                let R = parseInt(textColor[josnekibrojac].substr(1, 2), 16);
+                let G = parseInt(textColor[josnekibrojac].substr(3, 2), 16);
+                let B = parseInt(textColor[josnekibrojac].substr(5, 2), 16);
+                R = R / 255;
+                G = G / 255;
+                B = B / 255;
+                clrarray.push(R, G, B, 1);
+                anim.renderer.elements[i].updateDocumentData(
+                    { t: text[josnekibrojac], fc: clrarray },
+                    0
+                );
+                josnekibrojac++;
+                proba++;
+            }
+            console.log(josnekibrojac,"josnekibrojac");
+            console.log(proba,"proba");
         }
-    }
     })
-    
+
 }
