@@ -1,13 +1,13 @@
 var anim;
 var podaci;
 var innerHtml = "";
-$.getJSON("animations/giftbox.json", function (data) {
+$.getJSON("animations/shirtdata.json", function (data) {
     console.log('json loaded');
     podaci = data;
     insertFields();
     start2();    
 });
-function start() {
+function start() {//this is svg renderer
     var elem = document.getElementById("lottie");
     var animData = {
         container: elem,
@@ -23,8 +23,8 @@ function start() {
     anim = lottie.loadAnimation(animData);
     console.log(anim);
 }
-//canvas
-function start2() {
+
+function start2() { //this is canvas renderer
     var elem = document.getElementById("lottie");
     var kanvas = document.getElementById("kanvas");
     var ctx = kanvas.getContext("2d");
@@ -62,19 +62,19 @@ function insertFields() {
             let layer = podaci.layers[i];
             if (layer.t && layer.st >= 0) {
                 innerHtml += "Layer: " + i + "<input type='text' class='inputsTextData' value='" + layer.t.d.k[0].s.t + "' size ='10'/>";
-                if (layer.ef) {
-                    checkcolor(layer.ef, function (res) {
-                        if (res) {
-                            innerHtml += "1<input type='color' class='inputsColorText' value='" + getColor(res) + "'/><br/>";
-                        }
-                        else {
-                            innerHtml += "2<input type='color' class='inputsColorText' value='" + getColor(layer.t.d.k[0].s.fc) + "'/><br/>";
-                        }
-                    });
-                }
-                else {
-                        innerHtml += "3<input type='color' class='inputsColorText' value='" + getColor(layer.t.d.k[0].s.fc) + "'/><br/>";                    
-                }
+                // if (layer.ef) {
+                //     checkcolor(layer.ef, function (res) {
+                //         if (res) {
+                //             innerHtml += "1<input type='color' class='inputsColorText' value='" + getColor(res) + "'/><br/>";
+                //         }
+                //         else {
+                //             innerHtml += "2<input type='color' class='inputsColorText' value='" + getColor(layer.t.d.k[0].s.fc) + "'/><br/>";
+                //         }
+                //     });
+                // }
+                // else {
+                        innerHtml += "<input type='color' class='inputsColorText' value='" + getColor(layer.t.d.k[0].s.fc) + "'/><br/>";                    
+                // }
             }
             if (layer.shapes) {
                 for (let j = 0; j < layer.shapes.length; j++) {
@@ -293,6 +293,5 @@ function updateData() {
                 cnt++;
             }
         }
-    })
-
+    });
 }
