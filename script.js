@@ -1,10 +1,11 @@
 var anim;
 var podaci;
 var innerHtml = "";
-$.getJSON("animations/check_mark_-_done.json", function (data) {
+$.getJSON("data2.json", function (data) {
     podaci = data;
     insertFields();
     start2();
+    console.log('json loaded');
 });
 function start() {
     var elem = document.getElementById("lottie");
@@ -111,9 +112,12 @@ function insertFields() {
                     }
                 }
             }
-            if (asset.w && asset.h && asset.p) {
-                innerHtml += "Photo dimensions: Width(" + asset.w + ") | Height(" + asset.h + ")<input type='text' class='inputsAssetData' value='" + asset.p + "'/>";
-            }
+            //check for photos
+
+            // if (asset.w && asset.h && asset.p) {
+            //     innerHtml += "Photo dimensions: Width(" + asset.w + ") | Height(" + asset.h + ")<input type='text' class='inputsAssetData' value='" + asset.p + "'/>";
+            // }
+
         }
     }
     if (innerHtml !== "") {
@@ -248,29 +252,41 @@ function updateData() {
                     }
                 }
             }
-            if (asset.w && asset.h && asset.p) {
-                podaci.assets[i].u = "";
-                podaci.assets[i].p = assetText[nnn];
-                podaci.assets[i].w = 1920;
-                podaci.assets[i].h = 1080;
-                nnn++;
-            }
+            //update photo
+
+            // if (asset.w && asset.h && asset.p) {
+            //     podaci.assets[i].u = "";
+            //     podaci.assets[i].p = assetText[nnn];
+            //     podaci.assets[i].w = 1920;
+            //     podaci.assets[i].h = 1080;
+            //     nnn++;
+            // }
+
         }
     }
     anim.destroy();
     start2();
-    for (let i = 0; i < text.length; i++) {
-        var clrarray = [];
-        let R = parseInt(textColor[i].substr(1, 2), 16);
-        let G = parseInt(textColor[i].substr(3, 2), 16);
-        let B = parseInt(textColor[i].substr(5, 2), 16);
+    anim.addEventListener('DOMLoaded',function () {
+        //alert('ucitan');
+        var josnekibrojac=0;
+    for(let i =0;i<podaci.layers.length;i++){
+        let layer=podaci.layers[i];
+        if (layer.t && layer.st >= 0) {
+            let clrarray = [];
+        let R = parseInt(textColor[josnekibrojac].substr(1, 2), 16);
+        let G = parseInt(textColor[josnekibrojac].substr(3, 2), 16);
+        let B = parseInt(textColor[josnekibrojac].substr(5, 2), 16);
         R = R / 255;
         G = G / 255;
         B = B / 255;
         clrarray.push(R, G, B, 1);
         anim.renderer.elements[i].updateDocumentData(
-            { t: element, fc: clrarray },
+            { t: text[josnekibrojac], fc: clrarray },
             0
         );
+        josnekibrojac++;
+        }
     }
+    })
+    
 }
