@@ -111,7 +111,7 @@ function insertFields() {
         });
     }
     if (innerHtml !== "") {
-        $('#inputs').html(innerHtml + "<button type='button' id='btnUpdate'>Update data</button><button type='button' id='btnPic'>Update pic</button>");
+        $('#inputs').html(innerHtml + "<button type='button' id='btnUpdate'>Update data</button>");
     }
 }
 function getColor(boja) {
