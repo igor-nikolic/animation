@@ -1,7 +1,7 @@
 var anim;
 var podaci;
 var innerHtml = "";
-$.getJSON("standard_hex_loader.json", function (data) {
+$.getJSON("download.json", function (data) {
     podaci = data;
     insertFields();
     start();    

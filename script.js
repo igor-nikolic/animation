@@ -1,10 +1,10 @@
 var anim;
 var podaci;
 var innerHtml = "";
-$.getJSON("standard_hex_loader.json", function (data) {
+$.getJSON("animations/check_mark_-_done.json", function (data) {
     podaci = data;
     insertFields();
-    start();
+    start2();
 });
 function start() {
     var elem = document.getElementById("lottie");
@@ -64,15 +64,15 @@ function insertFields() {
                 if (layer.ef) {
                     checkcolor(layer.ef, function (res) {
                         if (res) {
-                            innerHtml += "if <input type='color' class='inputsColorText' value='" + getColor(res) + "'/><br/>";
+                            innerHtml += "<input type='color' class='inputsColorText' value='" + getColor(res) + "'/><br/>";
                         }
                         else {
-                            innerHtml += "else 1 <input type='color' class='inputsColorText' value='" + getColor(layer.t.d.k[0].s.fc) + "'/><br/>";
+                            innerHtml += "<input type='color' class='inputsColorText' value='" + getColor(layer.t.d.k[0].s.fc) + "'/><br/>";
                         }
                     });
                 }
                 else {
-                    innerHtml += "else 2<input type='color' class='inputsColorText' value='" + getColor(layer.t.d.k[0].s.fc) + "'/><br/>";
+                    innerHtml += "<input type='color' class='inputsColorText' value='" + getColor(layer.t.d.k[0].s.fc) + "'/><br/>";
                 }
             }
             if (layer.shapes) {
@@ -100,7 +100,7 @@ function insertFields() {
                         for (let k = 0; k < layer.shapes.length; k++) {
                             let shape = layer.shapes[k];
                             if (shape.it) {
-                                for (let l = o; l < shape.it.length; l++) {
+                                for (let l = 0; l < shape.it.length; l++) {
                                     let prop = shape.it[l];
                                     if (['fl', 'st'].includes(prop.ty)) {
                                         innerHtml += prop.nm + " <input type='color' class ='inputsColorShapesAsset' value='" + getColor(prop.c.k) + "'/> &nbsp;&nbsp;";
@@ -228,7 +228,7 @@ function updateData() {
                         for (let k = 0; k < layer.shapes.length; k++) {
                             let shape = layer.shapes[k];
                             if (shape.it) {
-                                for (let l = o; l < shape.it.length; l++) {
+                                for (let l = 0; l < shape.it.length; l++) {
                                     let prop = shape.it[l];
                                     if (['fl', 'st'].includes(prop.ty)) {
                                         var clrarray = [];
