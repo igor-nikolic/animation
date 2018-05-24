@@ -1,11 +1,11 @@
 var anim;
 var podaci;
 var innerHtml = "";
-$.getJSON("animations/lorem.json", function (data) {
+$.getJSON("animations/giftbox.json", function (data) {
+    console.log('json loaded');
     podaci = data;
     insertFields();
-    start2();
-    console.log('json loaded');
+    start2();    
 });
 function start() {
     var elem = document.getElementById("lottie");
@@ -199,10 +199,7 @@ function updateData() {
             shapeColorAsset.push(inputsColorShapesAsset[i].value)
         }
     }
-    var n = 0;
-    var nn = 0;
-    var nnn = 0;
-    for (let i = 0; i < podaci.layers.length; i++) {
+    for (let i = 0,cnt=0; i < podaci.layers.length; i++) {
         let layer = podaci.layers[i];
         if (layer.shapes) {
             for (let j = 0; j < layer.shapes.length; j++) {
@@ -211,17 +208,17 @@ function updateData() {
                     for (let k = 0; k < shape.it.length; k++) {
                         let prop = shape.it[k];
                         if (['fl', 'st'].includes(prop.ty)) {
-                            if (typeof prop.c.k == 'number') {
+                            if (typeof prop.c.k[0] == 'number') {
                                 var clrarray = [];
-                                let R = parseInt(shapeColor[n].substr(1, 2), 16);
-                                let G = parseInt(shapeColor[n].substr(3, 2), 16);
-                                let B = parseInt(shapeColor[n].substr(5, 2), 16);
+                                let R = parseInt(shapeColor[cnt].substr(1, 2), 16);
+                                let G = parseInt(shapeColor[cnt].substr(3, 2), 16);
+                                let B = parseInt(shapeColor[cnt].substr(5, 2), 16);
                                 R = R / 255;
                                 G = G / 255;
                                 B = B / 255;
                                 clrarray.push(R, G, B, 1);
                                 podaci.layers[i].shapes[j].it[k].c.k = clrarray;
-                                n++;
+                                cnt++;
                             }
 
                         }
@@ -230,8 +227,9 @@ function updateData() {
             }
         }
     }
+
     if (podaci.assets) {
-        for (let i = 0; i < podaci.assets.length; i++) {
+        for (let i = 0,cnt=0,cnt2=0; i < podaci.assets.length; i++) {
             let asset = podaci.assets[i];
             if (asset.layers) {
                 for (let j = 0; j < asset.layers.length; j++) {
@@ -245,15 +243,15 @@ function updateData() {
                                     if (['fl', 'st'].includes(prop.ty)) {
                                         if (typeof prop.c.k[0] == 'number') {
                                             var clrarray = [];
-                                            let R = parseInt(shapeColorAsset[nn].substr(1, 2), 16);
-                                            let G = parseInt(shapeColorAsset[nn].substr(3, 2), 16);
-                                            let B = parseInt(shapeColorAsset[nn].substr(5, 2), 16);
+                                            let R = parseInt(shapeColorAsset[cnt].substr(1, 2), 16);
+                                            let G = parseInt(shapeColorAsset[cnt].substr(3, 2), 16);
+                                            let B = parseInt(shapeColorAsset[cnt].substr(5, 2), 16);
                                             R = R / 255;
                                             G = G / 255;
                                             B = B / 255;
                                             clrarray.push(R, G, B, 1);
                                             podaci.assets[i].layers[j].shapes[k].it[l].c.k = clrarray;
-                                            nn++;
+                                            cnt++;
                                         }
                                     }
                                 }
@@ -266,10 +264,10 @@ function updateData() {
 
             // if (asset.w && asset.h && asset.p) {
             //     podaci.assets[i].u = "";
-            //     podaci.assets[i].p = assetText[nnn];
+            //     podaci.assets[i].p = assetText[cnt2];
             //     podaci.assets[i].w = 1920;
             //     podaci.assets[i].h = 1080;
-            //     nnn++;
+            //     cnt2++;
             // }
 
         }
@@ -277,28 +275,23 @@ function updateData() {
     anim.destroy();
     start2();
     anim.addEventListener('DOMLoaded', function () {
-        //alert('ucitan');
-        var josnekibrojac = 0;
-        for (let i = 0,proba=0; i < podaci.layers.length; i++) {
+        for (let i = 0,cnt=0; i < podaci.layers.length; i++) {
             let layer = podaci.layers[i];
             if (layer.t && layer.st >= 0) {
                 let clrarray = [];
-                let R = parseInt(textColor[josnekibrojac].substr(1, 2), 16);
-                let G = parseInt(textColor[josnekibrojac].substr(3, 2), 16);
-                let B = parseInt(textColor[josnekibrojac].substr(5, 2), 16);
+                let R = parseInt(textColor[cnt].substr(1, 2), 16);
+                let G = parseInt(textColor[cnt].substr(3, 2), 16);
+                let B = parseInt(textColor[cnt].substr(5, 2), 16);
                 R = R / 255;
                 G = G / 255;
                 B = B / 255;
                 clrarray.push(R, G, B, 1);
                 anim.renderer.elements[i].updateDocumentData(
-                    { t: text[josnekibrojac], fc: clrarray },
+                    { t: text[cnt], fc: clrarray },
                     0
                 );
-                josnekibrojac++;
-                proba++;
+                cnt++;
             }
-            console.log(josnekibrojac,"josnekibrojac");
-            console.log(proba,"proba");
         }
     })
 
