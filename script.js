@@ -1,9 +1,9 @@
 var anim;
-var podaci;
+var JSONdata;
 var innerHtml = "";
-$.getJSON("animations/shirtdata.json", function (data) {
+$.getJSON("animations/share.json", function (data) {
     console.log('json loaded');
-    podaci = data;
+    JSONdata = data;
     insertFields();
     start2();    
 });
@@ -18,7 +18,7 @@ function start() {//this is svg renderer
             progressiveLoad: false,
             preserveAsceptRatio: 'xMidYMid meet'
         },
-        animationData: podaci
+        animationData: JSONdata
     };
     anim = lottie.loadAnimation(animData);
     console.log(anim);
@@ -26,7 +26,7 @@ function start() {//this is svg renderer
 
 function start2() { //this is canvas renderer
     var elem = document.getElementById("lottie");
-    var kanvas = document.getElementById("kanvas");
+    var kanvas = document.getElementById("cnvs");
     var ctx = kanvas.getContext("2d");
     var animData = {
         container: elem,
@@ -40,9 +40,9 @@ function start2() { //this is canvas renderer
             preserveAsceptRatio: 'xMidYMid meet',
             clearCanvas: true,
             hideOnTransparent: true,
-            className: "nekaklasa"
+            className: "classForCanvas"
         },
-        animationData: podaci
+        animationData: JSONdata
     };
     anim = lottie.loadAnimation(animData);
 }
@@ -52,16 +52,16 @@ $(document).on('click', '#btnDestroy', function () {
     anim.destroy();
 });
 function numHex(s) {
-    var a = s.toString(16);
+    let a = s.toString(16);
     if ((a.length % 2) > 0) { a = "0" + a; }
     return a;
 }
 function insertFields() {
-    if (podaci.layers) {
-        for (let i = 0; i < podaci.layers.length; i++) {
-            let layer = podaci.layers[i];
+    if (JSONdata.layers) {
+        for (let i = 0; i < JSONdata.layers.length; i++) {
+            let layer = JSONdata.layers[i];
             if (layer.t && layer.st >= 0) {
-                innerHtml += "Layer: " + i + "<input type='text' class='inputsTextData' value='" + layer.t.d.k[0].s.t + "' size ='10'/>";
+                innerHtml += "Text: " + i + "<input type='text' class='inputsTextData' value='" + layer.t.d.k[0].s.t + "' size ='10'/>";
                 // if (layer.ef) {
                 //     checkcolor(layer.ef, function (res) {
                 //         if (res) {
@@ -86,7 +86,6 @@ function insertFields() {
                                 if (typeof prop.c.k[0] == 'number') {
                                     innerHtml += prop.nm + " : <input type='color' class ='inputsColorShapes' value='" + getColor(prop.c.k) + "'/> &nbsp;&nbsp;";
                                 }
-
                             }
                         }
                     }
@@ -94,9 +93,9 @@ function insertFields() {
             }
         }
     }
-    if (podaci.assets) {
-        for (let i = 0; i < podaci.assets.length; i++) {
-            let asset = podaci.assets[i];
+    if (JSONdata.assets) {
+        for (let i = 0; i < JSONdata.assets.length; i++) {
+            let asset = JSONdata.assets[i];
             if (asset.layers) {
                 for (let j = 0; j < asset.layers.length; j++) {
                     let layer = asset.layers[j];
@@ -129,19 +128,19 @@ function insertFields() {
         $('#inputs').html(innerHtml + "<button type='button' id='btnUpdate'>Update data</button>");
     }
 }
-function getColor(boja) {
-    let R = boja[0];
-    let G = boja[1];
-    let B = boja[2];
+function getColor(color) {
+    let R = color[0];
+    let G = color[1];
+    let B = color[2];
     R = Math.round(R * 255);
     G = Math.round(G * 255);
     B = Math.round(B * 255);
-    let color = "#" + numHex(R) + numHex(G) + numHex(B);
-    return color;
+    let colorHex = "#" + numHex(R) + numHex(G) + numHex(B);
+    return colorHex;
 }
 function checkcolor(obj, callback) {
     (function eachRecursive(obj) {
-        for (var prop in obj) {
+        for (let prop in obj) {
             if (typeof obj[prop] == "object")
                 eachRecursive(obj[prop]);
             else {
@@ -199,8 +198,8 @@ function updateData() {
             shapeColorAsset.push(inputsColorShapesAsset[i].value)
         }
     }
-    for (let i = 0,cnt=0; i < podaci.layers.length; i++) {
-        let layer = podaci.layers[i];
+    for (let i = 0,cnt=0; i < JSONdata.layers.length; i++) {
+        let layer = JSONdata.layers[i];
         if (layer.shapes) {
             for (let j = 0; j < layer.shapes.length; j++) {
                 let shape = layer.shapes[j];
@@ -209,7 +208,7 @@ function updateData() {
                         let prop = shape.it[k];
                         if (['fl', 'st'].includes(prop.ty)) {
                             if (typeof prop.c.k[0] == 'number') {
-                                var clrarray = [];
+                                let clrarray = [];
                                 let R = parseInt(shapeColor[cnt].substr(1, 2), 16);
                                 let G = parseInt(shapeColor[cnt].substr(3, 2), 16);
                                 let B = parseInt(shapeColor[cnt].substr(5, 2), 16);
@@ -217,7 +216,7 @@ function updateData() {
                                 G = G / 255;
                                 B = B / 255;
                                 clrarray.push(R, G, B, 1);
-                                podaci.layers[i].shapes[j].it[k].c.k = clrarray;
+                                JSONdata.layers[i].shapes[j].it[k].c.k = clrarray;
                                 cnt++;
                             }
 
@@ -228,9 +227,9 @@ function updateData() {
         }
     }
 
-    if (podaci.assets) {
-        for (let i = 0,cnt=0,cnt2=0; i < podaci.assets.length; i++) {
-            let asset = podaci.assets[i];
+    if (JSONdata.assets) {
+        for (let i = 0,cnt=0,cnt2=0; i < JSONdata.assets.length; i++) {
+            let asset = JSONdata.assets[i];
             if (asset.layers) {
                 for (let j = 0; j < asset.layers.length; j++) {
                     let layer = asset.layers[j];
@@ -242,7 +241,7 @@ function updateData() {
                                     let prop = shape.it[l];
                                     if (['fl', 'st'].includes(prop.ty)) {
                                         if (typeof prop.c.k[0] == 'number') {
-                                            var clrarray = [];
+                                            let clrarray = [];
                                             let R = parseInt(shapeColorAsset[cnt].substr(1, 2), 16);
                                             let G = parseInt(shapeColorAsset[cnt].substr(3, 2), 16);
                                             let B = parseInt(shapeColorAsset[cnt].substr(5, 2), 16);
@@ -250,7 +249,7 @@ function updateData() {
                                             G = G / 255;
                                             B = B / 255;
                                             clrarray.push(R, G, B, 1);
-                                            podaci.assets[i].layers[j].shapes[k].it[l].c.k = clrarray;
+                                            JSONdata.assets[i].layers[j].shapes[k].it[l].c.k = clrarray;
                                             cnt++;
                                         }
                                     }
@@ -263,10 +262,10 @@ function updateData() {
             //update photo
 
             // if (asset.w && asset.h && asset.p) {
-            //     podaci.assets[i].u = "";
-            //     podaci.assets[i].p = assetText[cnt2];
-            //     podaci.assets[i].w = 1920;
-            //     podaci.assets[i].h = 1080;
+            //     JSONdata.assets[i].u = "";
+            //     JSONdata.assets[i].p = assetText[cnt2];
+            //     JSONdata.assets[i].w = 1920;
+            //     JSONdata.assets[i].h = 1080;
             //     cnt2++;
             // }
 
@@ -275,8 +274,8 @@ function updateData() {
     anim.destroy();
     start2();
     anim.addEventListener('DOMLoaded', function () {
-        for (let i = 0,cnt=0; i < podaci.layers.length; i++) {
-            let layer = podaci.layers[i];
+        for (let i = 0,cnt=0; i < JSONdata.layers.length; i++) {
+            let layer = JSONdata.layers[i];
             if (layer.t && layer.st >= 0) {
                 let clrarray = [];
                 let R = parseInt(textColor[cnt].substr(1, 2), 16);
